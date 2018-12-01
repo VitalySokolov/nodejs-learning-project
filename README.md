@@ -8,7 +8,7 @@ To build and run this app locally you will need:
 # Getting started
 - Clone the repository
 ```
-git clone https://github.com/VitalySokolov/nodejs-learning-projec.git <project_name>
+git clone https://github.com/VitalySokolov/nodejs-learning-project.git <project_name>
 ```
 - Install dependencies
 ```
