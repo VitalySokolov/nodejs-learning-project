@@ -1,3 +1,5 @@
 {
-  "name": "​Node.js Homework Application"
+  "name": "​Node.js Homework Application",
+  "pathToCsvData": "data",
+  "csvProcessingDelay": 30
 }
