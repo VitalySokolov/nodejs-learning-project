@@ -1,27 +1,37 @@
-// import EventEmitter from 'events';
-// import fs from 'fs';
 const EventEmitter = require('events');
 const fs = require('fs');
+const path = require('path');
 
 class DirWatcher extends EventEmitter {
+  constructor() {
+    super();
+    this.filesToWatch = [];
+  }
 
-  watch(path, delay) {
-    //read
-    fs.readdir(path, (err, files) => {
+  watch(dataPath, delay) {
+    setInterval(() => this.readDataDir(dataPath), delay * 1000);
+  }
+
+  readDataDir(dataPath) {
+    fs.readdir(dataPath, (err, files) => {
       if (err) {
         console.log(err);
         return;
       }
 
-      files.forEach((file) => this.emit('dirwatcher:changed', file))
+      const csvFiles = files.filter((file) => path.extname(file) === '.csv');
+      this.notifyOnDataChanges(csvFiles);
     });
+  }
 
-    //watch
-    fs.watch(path, (event, filename) => {
-      if (event === 'rename') {
-        this.emit('dirwatcher:changed', filename);
-      }
-    });
+  notifyOnDataChanges(currentDataFiles) {
+    currentDataFiles
+      .filter((file) => !this.filesToWatch.includes(file))
+      .forEach((file) => {
+        this.emit('dirwatcher:changed', file);
+      });
+
+    this.filesToWatch = currentDataFiles;
   }
 }
 
