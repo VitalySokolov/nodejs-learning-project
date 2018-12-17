@@ -19,7 +19,6 @@ npm install
 ```
 npm start
 ```
-
 # Async Development task
 Implemented watching csv in the 'data' folder.
 - Watch works only for .csv files.
