@@ -5,14 +5,14 @@ const path = require('path');
 class DirWatcher extends EventEmitter {
   constructor() {
     super();
-    this.filesToWatch = [];
+    this._filesToWatch = [];
   }
 
   watch(dataPath, delay) {
-    setInterval(() => this.readDataDir(dataPath), delay * 1000);
+    setInterval(() => this._readDataDir(dataPath), delay * 1000);
   }
 
-  readDataDir(dataPath) {
+  _readDataDir(dataPath) {
     fs.readdir(dataPath, (err, files) => {
       if (err) {
         console.log(err);
@@ -20,18 +20,18 @@ class DirWatcher extends EventEmitter {
       }
 
       const csvFiles = files.filter((file) => path.extname(file) === '.csv');
-      this.notifyOnDataChanges(csvFiles);
+      this._notifyOnDataChanges(csvFiles);
     });
   }
 
-  notifyOnDataChanges(currentDataFiles) {
+  _notifyOnDataChanges(currentDataFiles) {
     currentDataFiles
-      .filter((file) => !this.filesToWatch.includes(file))
+      .filter((file) => !this._filesToWatch.includes(file))
       .forEach((file) => {
         this.emit('dirwatcher:changed', file);
       });
 
-    this.filesToWatch = currentDataFiles;
+    this._filesToWatch = currentDataFiles;
   }
 }
 

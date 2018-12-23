@@ -1,6 +1,7 @@
 {
   "extends": "airbnb-base",
   "rules": {
-    "arrow-parens": ["error", "always"]
+    "arrow-parens": ["error", "always"],
+    "no-underscore-dangle": "off"
   }
 }

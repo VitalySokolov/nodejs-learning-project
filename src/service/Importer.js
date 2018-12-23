@@ -5,10 +5,10 @@ const csvSync = require('csvjson');
 
 class Importer {
   constructor(watcher, pathToDataDir) {
-    this.watcher = watcher;
-    this.pathToCsvData = pathToDataDir;
+    this._watcher = watcher;
+    this._pathToCsvData = pathToDataDir;
 
-    this.init();
+    this._init();
   }
 
   static import(pathToCsvFile) {
@@ -17,16 +17,16 @@ class Importer {
 
   static importSync(pathToCsvFile) {
     if (!fs.existsSync(pathToCsvFile)) {
-      return 'File not found';
+      return { error: 'File not found' };
     }
 
-    const dataJson = fs.readFileSync(pathToCsvFile, 'utf8');
-    return csvSync.toObject(dataJson);
+    const csvData = fs.readFileSync(pathToCsvFile, 'utf8');
+    return csvSync.toObject(csvData);
   }
 
-  init() {
-    this.watcher.on('dirwatcher:changed', (filename) => {
-      this.constructor.import(path.join(this.pathToCsvData, filename))
+  _init() {
+    this._watcher.on('dirwatcher:changed', (filename) => {
+      this.constructor.import(path.join(this._pathToCsvData, filename))
         .then((dataJson) => {
           console.log('====== PARSE DATA FILE =====');
           console.log(dataJson);
@@ -36,7 +36,7 @@ class Importer {
   }
 
   start(delay) {
-    this.watcher.watch(this.pathToCsvData, delay);
+    this._watcher.watch(this._pathToCsvData, delay);
   }
 }
 
