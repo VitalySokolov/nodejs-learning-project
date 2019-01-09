@@ -19,3 +19,9 @@ npm install
 ```
 npm start
 ```
+# Async Development task
+Implemented watching csv in the 'data' folder.
+- Watch works only for .csv files.
+- Only create, rename and delete operations are checked. Changes in files are not checked
+ (Note: every CSV file in a directory should be processed only once.).
+- Delay is set in the config.json file - "csvProcessingDelay" parameter.

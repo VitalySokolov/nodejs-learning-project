@@ -1,9 +1,13 @@
-import config from './config/config.json';
-import {User, Product} from './models/index';
+const config = require('./config/config.json');
+const Importer = require('./service/Importer');
+const DirWatcher = require('./service/DirWatcher');
 
-const user = new User();
-const product = new Product();
+const pathToCsvFiles = config.pathToCsvData;
 
-console.log(user.name);
-console.log(product.name);
-console.log(config.name);
+const dirWatcher = new DirWatcher();
+const importer = new Importer(dirWatcher, pathToCsvFiles);
+
+importer.start(config.csvProcessingDelay);
+
+console.log('==== SYNC PARSE DATA FILE ====');
+console.log(Importer.importSync('data/example1.csv'));
