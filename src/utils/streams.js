@@ -1,3 +1,7 @@
+const csv = require('csvtojson');
+const fs = require('fs');
+const readline = require('readline');
+
 const convertFromFile = 'convertFromFile';
 const convertToFile = 'convertToFile';
 const cssBundle = 'cssBundle';
@@ -22,20 +26,65 @@ const yargs = require('yargs')
     .version(false);
 const argv = yargs.argv;
 
+const reverseFunc = () => {
+  const rl = _getStdinReadline();
+
+  rl.on('line', (line) => {
+    console.log(_reverseString(line));
+  });
+};
+
+const _getStdinReadline = () => {
+  return readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+  });
+};
+
+const _reverseString = (str) => str.split('').reverse().join('');
+
 const transformFunc = () => {
-  // console.log(argv._);
-  const text = argv._[0];
-  if (!text) {
-    console.log('No text');
+  const rl = _getStdinReadline();
+
+  rl.on('line', (line) => {
+    console.log(line.toUpperCase());
+  })
+};
+
+const outputFileFunc = () => {
+  const fileName = argv.file;
+  if (!fileName || typeof fileName !== 'string') {
+    console.log('ERROR No ARG');
+    return;
   }
-  console.log(transform);
+
+  const src = fs.createReadStream(fileName);
+  src.on('error', (err) => {
+    console.log('ERROR File Not Exist', err.message);
+  });
+
+  src
+    .pipe(process.stdout);
+};
+
+const convertFromFileFunc = () => {
+  const fileName = argv.file;
+
+  csv().fromFile(fileName)
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    })
 };
 
 const action = argv.action;
 
 switch (action) {
   case convertFromFile:
-    console.log(convertFromFile);
+    convertFromFileFunc();
     break;
   case convertToFile:
     console.log(convertToFile);
@@ -44,10 +93,10 @@ switch (action) {
     console.log(cssBundle);
     break;
   case outputFile:
-    console.log(outputFile);
+    outputFileFunc();
     break;
   case reverse:
-    console.log(reverse);
+    reverseFunc();
     break;
   case transform:
     transformFunc();
@@ -58,6 +107,3 @@ switch (action) {
   default:
     console.log('Unknown command');
 }
-
-
-console.log(yargs.showHelp());
