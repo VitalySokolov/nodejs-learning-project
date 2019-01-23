@@ -26,12 +26,18 @@ const yargs = require('yargs')
     .version(false);
 const argv = yargs.argv;
 
+/**
+ * Reverts each line from stdin.
+ */
 const reverseFunc = () => {
-  const rl = _getStdinReadline();
+  _processStdin(_reverseString);
+};
 
-  rl.on('line', (line) => {
-    console.log(_reverseString(line));
-  });
+/**
+ * Converts each line from stdin to Upper case.
+ */
+const transformFunc = () => {
+  _processStdin(_convertStringToUpperCase);
 };
 
 const _getStdinReadline = () => {
@@ -44,12 +50,14 @@ const _getStdinReadline = () => {
 
 const _reverseString = (str) => str.split('').reverse().join('');
 
-const transformFunc = () => {
+const _convertStringToUpperCase = (str) => str.toUpperCase();
+
+const _processStdin = (operation) => {
   const rl = _getStdinReadline();
 
   rl.on('line', (line) => {
-    console.log(line.toUpperCase());
-  })
+    console.log(operation(line));
+  });
 };
 
 const outputFileFunc = () => {
