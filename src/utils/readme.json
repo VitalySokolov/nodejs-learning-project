@@ -1,0 +1,80 @@
+{
+  "reverse": [
+    "",
+    "reverse USAGE:",
+    "Reverse string data from process.stdin to process.stdout.",
+    "",
+    "   Example:",
+    "node src/utils/streams.js --action=reverse",
+    "or",
+    "node src/utils/streams.js -a reverse",
+    "or",
+    "node src/utils/streams.js -a reverse < data/data.txt"
+  ],
+  "transform": [
+    "",
+    "transform USAGE:",
+    "Convert data from process.stdin to upper-case data on process.stdout.",
+    "",
+    "   Example:",
+    "node src/utils/streams.js --action=transform",
+    "or",
+    "node src/utils/streams.js -a transform",
+    "or",
+    "node src/utils/streams.js -a transform < data/data.txt"
+  ],
+  "convertFromFile" : [
+    "",
+    "convertFromFile USAGE:",
+    "Convert file provided by --file option from csv to json and output data to process.stdout.",
+    "--file option is required for this command. You need to provide a correct 'csv' file.",
+    "",
+    "  Example:",
+    "node src/utils/streams.js --action=convertFromFile --file=data/example2.csv",
+    "or",
+    "node src/utils/streams.js -a convertFromFile -f data/example2.csv",
+    ""
+  ],
+  "convertToFile" : [
+    "",
+    "convertToFile USAGE:",
+    "Convert file provided by --file option from csv to json and output data",
+    "to a result file with the same name but json extension.",
+    "--file option is required for this command. You need to provide a correct 'csv' file.",
+    "",
+    "  Example:",
+    "node src/utils/streams.js --action=convertFromFile --file=data/example2.csv",
+    "or",
+    "node src/utils/streams.js -a convertFromFile -f data/example2.csv",
+    ""
+  ],
+  "outputFile" : [
+    "",
+    "outputFile USAGE:",
+    "Pipe the given file provided by --file option to process.stdout.",
+    "--file option is required for this command. You need to provide an existing file.",
+    "",
+    "  Example:",
+    "node src/utils/streams.js --action=outputFile --file=data/test.txt",
+    "or",
+    "node src/utils/streams.js -a outputFile -f data/test.txt",
+    ""
+  ],
+  "cssBundle" : [
+    "",
+    "cssBundle USAGE:",
+    "--path option is required for this command. You need to provide an existing path.",
+    "",
+    "Command does the following:",
+    "a.Grab all css files from the given path provided by --path option.",
+    "b.Concat them into one (big) css file.",
+    "c.Add contents of https://epa.ms/nodejs18-hw3-css to the end of the result file.",
+    "d.Save the output in the file called bundle.css placed in the same provided path.",
+    "",
+    "  Example:",
+    "node src/utils/streams.js --action=cssBundle --path=data",
+    "or",
+    "node src/utils/streams.js -a cssBundle -p data",
+    ""
+  ]
+}
