@@ -69,7 +69,6 @@ const cssBundleFunc = () => {
     return;
   }
 
-  files.push(path.join(__dirname, 'nodejs18-hw3-css.css'));
   const bundleCssFile = path.join(pathToCss, 'bundle.css');
   try {
     fs.unlinkSync(bundleCssFile);
@@ -84,11 +83,11 @@ const cssBundleFunc = () => {
   }
 
   const bundleCssStream = fs.createWriteStream(bundleCssFile, { flags: 'a' });
+  files.push(path.join(__dirname, 'nodejs18-hw3-css.css'));
 
   files
       .filter((file) => path.extname(file) === '.css')
       .forEach((cssFile) => {
-        console.log(`Reading ${cssFile}`);
         const readStream = fs.createReadStream(cssFile);
         readStream.on('error', (err) => {
           console.log(err.message);
