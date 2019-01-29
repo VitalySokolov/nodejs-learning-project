@@ -138,12 +138,12 @@ const _removeFile = (fileName) => {
   return true;
 };
 
-const _writeAllFilesToBundleCss = (fileArray, bundleCssFile) => {
+const _writeAllFilesToBundleCss = (fileArray, bundleCssFile, help) => {
   const bundleCssStream = fs.createWriteStream(bundleCssFile, { flags: 'a' });
   const currentCssFile = fileArray.shift();
   bundleCssStream.on('finish', () => {
     if (fileArray.length > 0) {
-      _writeAllFilesToBundleCss(fileArray, bundleCssFile);
+      _writeAllFilesToBundleCss(fileArray, bundleCssFile, help);
     }
   });
 
@@ -195,7 +195,7 @@ const cssBundleFunc = () => {
   }
 
   files.push(path.join(__dirname, 'nodejs18-hw3-css.css'));
-  _writeAllFilesToBundleCss(files, bundleCssFile);
+  _writeAllFilesToBundleCss(files, bundleCssFile, help);
 };
 
 /**
