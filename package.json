@@ -6,6 +6,7 @@
   "scripts": {
     "build": "babel src --out-dir ./dist --source-maps",
     "start": "nodemon --exec babel-node src/app.js",
+    "lint": "./node_modules/.bin/eslint src/**/*.js src/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Vitalii Sokolov",

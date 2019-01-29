@@ -43,9 +43,9 @@
     "--file option is required for this command. You need to provide a correct 'csv' file.",
     "",
     "  Example:",
-    "node src/utils/streams.js --action=convertFromFile --file=data/example2.csv",
+    "node src/utils/streams.js --action=convertToFile --file=data/example2.csv",
     "or",
-    "node src/utils/streams.js -a convertFromFile -f data/example2.csv",
+    "node src/utils/streams.js -a convertToFile -f data/example2.csv",
     ""
   ],
   "outputFile" : [
