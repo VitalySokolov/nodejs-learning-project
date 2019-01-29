@@ -138,6 +138,25 @@ const _removeFile = (fileName) => {
   return true;
 };
 
+const _writeAllFilesToBundleCss = (fileArray, bundleCssFile) => {
+  const bundleCssStream = fs.createWriteStream(bundleCssFile, { flags: 'a' });
+  const currentCssFile = fileArray.shift();
+  bundleCssStream.on('finish', () => {
+    if (fileArray.length > 0) {
+      _writeAllFilesToBundleCss(fileArray, bundleCssFile);
+    }
+  });
+
+  const readStream = fs.createReadStream(currentCssFile);
+  readStream.on('error', (err) => {
+    console.log(err.message);
+    console.log(help);
+  });
+
+  readStream
+    .pipe(bundleCssStream);
+};
+
 /**
  * Reverts each line from stdin.
  */
@@ -175,20 +194,8 @@ const cssBundleFunc = () => {
     return;
   }
 
-  const bundleCssStream = fs.createWriteStream(bundleCssFile, { flags: 'a' });
   files.push(path.join(__dirname, 'nodejs18-hw3-css.css'));
-
-  files
-    .forEach((cssFile) => {
-      const readStream = fs.createReadStream(cssFile);
-      readStream.on('error', (err) => {
-        console.log(err.message);
-        console.log(help);
-      });
-
-      readStream
-        .pipe(bundleCssStream);
-    });
+  _writeAllFilesToBundleCss(files, bundleCssFile);
 };
 
 /**
