@@ -138,23 +138,20 @@ const _removeFile = (fileName) => {
   return true;
 };
 
-const _writeAllFilesToBundleCss = (fileArray, bundleCssFile, help) => {
-  const bundleCssStream = fs.createWriteStream(bundleCssFile, { flags: 'a' });
-  const currentCssFile = fileArray.shift();
-  bundleCssStream.on('finish', () => {
-    if (fileArray.length > 0) {
-      _writeAllFilesToBundleCss(fileArray, bundleCssFile, help);
-    }
-  });
+const _streamToFile = (stream, fileName) => new Promise((resolve, reject) => {
+  const writeStream = fs.createWriteStream(fileName, { flags: 'a' });
+  stream.on('error', reject);
+  writeStream.on('finish', resolve);
+  stream.pipe(writeStream);
+});
 
-  const readStream = fs.createReadStream(currentCssFile);
-  readStream.on('error', (err) => {
-    console.log(err.message);
-    console.log(help);
-  });
+const _writeAllFilesToBundleFile = (fileArray, bundleFile) => fileArray
+  .map((fileName) => fs.createReadStream(fileName))
+  .reduce((acc, stream) => acc.then(() => _streamToFile(stream, bundleFile)), Promise.resolve());
 
-  readStream
-    .pipe(bundleCssStream);
+
+const _getStreamFromFile = function (fileName) {
+  return Promise.resolve(fs.createReadStream(fileName, 'utf8'));
 };
 
 /**
@@ -194,8 +191,14 @@ const cssBundleFunc = () => {
     return;
   }
 
-  files.push(path.join(__dirname, 'nodejs18-hw3-css.css'));
-  _writeAllFilesToBundleCss(files, bundleCssFile, help);
+  const mandatoryContentStream = _getStreamFromFile(path.join(__dirname, 'nodejs18-hw3-css.css'));
+  _writeAllFilesToBundleFile(files, bundleCssFile)
+    .then(() => mandatoryContentStream)
+    .then((fileStream) => _streamToFile(fileStream, bundleCssFile))
+    .catch((err) => {
+      console.log(err.message);
+      console.log(help);
+    });
 };
 
 /**
