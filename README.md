@@ -25,3 +25,9 @@ Implemented watching csv in the 'data' folder.
 - Only create, rename and delete operations are checked. Changes in files are not checked
  (Note: every CSV file in a directory should be processed only once.).
 - Delay is set in the config.json file - "csvProcessingDelay" parameter.
+
+# Streams util task
+Display utils usage with command:
+```
+node src/utils/streams.js --action=readme
+```
