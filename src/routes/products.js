@@ -33,12 +33,24 @@ const products = [
   },
 ];
 
+const _validateProduct = (product) => {
+  if (!product.title || !product.amount) {
+    return false;
+  }
+
+  return (product.title.trim().length !== 0 && !Number.isNaN(parseInt(product.amount, 10)));
+};
+
 router.get('/', (req, res) => {
   res.send(products);
 });
 
 router.post('/', (req, res) => {
   const newProduct = req.body;
+
+  if (!_validateProduct(newProduct)) {
+    return res.status(400).send('JSON with "title" and "amount" properties is required.');
+  }
 
   const product = {
     id: nextId,
@@ -49,7 +61,7 @@ router.post('/', (req, res) => {
   products.push(product);
   nextId += 1;
 
-  res.send(product);
+  return res.status(201).send(product);
 });
 
 router.get('/:id', (req, res) => {
@@ -59,7 +71,7 @@ router.get('/:id', (req, res) => {
     return res.status(404).send('The product with the given ID was not found.');
   }
 
-  res.send(product);
+  return res.status(200).send(product);
 });
 
 router.get('/:id/reviews', (req, res) => {
@@ -69,7 +81,7 @@ router.get('/:id/reviews', (req, res) => {
     return res.status(404).send('The product with the given ID was not found.');
   }
 
-  res.send(product.reviews);
+  return res.status(200).send(product.reviews);
 });
 
 module.exports = router;

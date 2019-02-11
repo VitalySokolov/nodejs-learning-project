@@ -23,7 +23,7 @@ app.use('/api/products', products);
 
 app.use((req, res, next) => {
   if (req.url === '/') {
-    res.send('Hello');
+    res.render('index');
   } else {
     next();
   }
@@ -32,7 +32,9 @@ app.use((req, res, next) => {
 // catch 404 and forward to error handler
 app.use((req, res, next) => next(createError(404)));
 
-// error handler
+// Error handler
+// Disable eslint as all args are required.
+/* eslint no-unused-vars: ["error", { "args": "none" }] */
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
