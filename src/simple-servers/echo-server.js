@@ -17,7 +17,6 @@ http.createServer()
     const { method } = req;
     switch (method) {
       case 'GET':
-        // const message = _getMessageFromQuery(req);
         res.end(_getMessageFromQuery(req) || help);
         break;
       case 'POST':
