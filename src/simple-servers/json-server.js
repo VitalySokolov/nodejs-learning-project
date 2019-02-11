@@ -9,8 +9,8 @@ const product = {
   price: 99.99,
   options: [
     { color: 'blue' },
-    { size: 'XL' }
-  ]
+    { size: 'XL' },
+  ],
 };
 
 http.createServer((req, res) => {

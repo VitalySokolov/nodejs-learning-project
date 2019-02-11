@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -16,38 +17,23 @@ app.set('view engine', 'ejs');
 app.use(cookieParser);
 app.use(queryParser);
 
-// app.use(express.json);
+app.use(bodyParser.json());
 app.use('/api/users', users);
 app.use('/api/products', products);
 
 app.use((req, res, next) => {
-  if(req.url === '/') {
-    res.cookie('username', 'John');
-    res.cookie('username2', 'John');
+  if (req.url === '/') {
     res.send('Hello');
   } else {
     next();
   }
 });
 
-app.use((req, res, next) => {
-  if(req.url === '/error') {
-    Hello();
-  } else {
-    next();
-  }
-});
-
 // catch 404 and forward to error handler
-app.use(function(req, res) {
-  res.status(404).send('Page not Found');
-});
-// app.use(function(req, res, next) {
-//   next(createError(404));
-// });
+app.use((req, res, next) => next(createError(404)));
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -58,4 +44,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-

@@ -15,9 +15,9 @@ git clone https://github.com/VitalySokolov/nodejs-learning-project.git <project_
 cd <project_name>
 npm install
 ```
-- Run the project with nodemon
+- Run Async Development app
 ```
-npm start
+npm run cli-app
 ```
 # Async Development task
 Implemented watching csv in the 'data' folder.
@@ -31,3 +31,31 @@ Display utils usage with command:
 ```
 node src/utils/streams.js --action=readme
 ```
+
+#Servers section
+Run simple plain text server
+```
+npm run text-server
+```
+
+Run simple html server
+```
+npm run html-server
+```
+
+Run simple json server
+```
+npm run json-server
+```
+
+Run simple echo server
+```
+npm run echo-server
+```
+
+Run server application
+```
+npm start
+```
+
+#Server application

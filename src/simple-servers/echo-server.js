@@ -1,26 +1,32 @@
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 const querystring = require('querystring');
 const url = require('url');
-const through2 = require('through2');
 
 const port = process.env.PORT || 3000;
 
 const _getMessageFromQuery = (request) => {
   const { query } = url.parse(request.url);
-  return querystring.parse(query).message || 'Message was not provided';
+  return querystring.parse(query).message || '';
 };
+
+const help = `Echo server returns body for "POST" requests 
+  or "message" query param value for "GET" requests.`;
 
 http.createServer()
   .on('request', (req, res) => {
-    const { url, method } = req;
-    console.log(`Url = ${url}`);
-    console.log(`Method = ${method}`);
-    if (url === '/echo') {
-      res.writeHead(200);
-      req
-        .pipe(res);
+    const { method } = req;
+    switch (method) {
+      case 'GET':
+        // const message = _getMessageFromQuery(req);
+        res.end(_getMessageFromQuery(req) || help);
+        break;
+      case 'POST':
+        res.writeHead(200);
+        req
+          .pipe(res);
+        break;
+      default:
+        res.end(help);
     }
   })
   .listen(port, () => {
