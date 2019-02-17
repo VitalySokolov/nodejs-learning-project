@@ -1,4 +1,5 @@
 const express = require('express');
+const { validate } = require('../models/product');
 
 const router = express.Router();
 
@@ -33,14 +34,6 @@ const products = [
   },
 ];
 
-const _validateProduct = (product) => {
-  if (!product.title || !product.amount) {
-    return false;
-  }
-
-  return (product.title.trim().length !== 0 && !Number.isNaN(parseInt(product.amount, 10)));
-};
-
 router.get('/', (req, res) => {
   res.send(products);
 });
@@ -48,15 +41,18 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   const newProduct = req.body;
 
-  if (!_validateProduct(newProduct)) {
-    return res.status(400).send('JSON with "title" and "amount" properties is required.');
+  const { error } = validate(newProduct);
+
+  if (error) {
+    console.log(error.details);
+    return res.status(400).send(`Product is not valid - ${error.details[0].message}`);
   }
 
   const product = {
     id: nextId,
-    title: newProduct.title || 'Default title',
-    amount: parseInt(newProduct.amount, 10) || 0,
-    reviews: [],
+    title: newProduct.title,
+    amount: newProduct.amount,
+    reviews: newProduct.reviews || [],
   };
   products.push(product);
   nextId += 1;
