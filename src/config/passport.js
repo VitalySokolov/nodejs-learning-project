@@ -2,11 +2,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const { getUserByEmail } = require('../models/user');
 
-passport.use(new LocalStrategy({
+passport.use(new LocalStrategy(
+  {
     usernameField: 'email',
-    passwordField: 'password'
+    passwordField: 'password',
   },
-  function (email, password, cb) {
+  (email, password, cb) => {
     const user = getUserByEmail(email);
 
     return cb(null, user, { message: 'Logged In Successfully' });
@@ -18,5 +19,5 @@ passport.use(new LocalStrategy({
     //     return cb(null, user, { message: 'Logged In Successfully' });
     //   })
     //   .catch(err => cb(err));
-  }
+  },
 ));

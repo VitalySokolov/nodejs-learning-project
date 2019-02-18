@@ -10,18 +10,18 @@ const products = require('./routes/products');
 const cookieParser = require('./middlewares/cookieParser');
 const queryParser = require('./middlewares/queryParser');
 const authentication = require('./middlewares/auth');
+require('./config/passport');
 
 const app = express();
-dotenv.config();
 
+dotenv.config();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+
 app.set('view engine', 'ejs');
-
 app.use(cookieParser);
-app.use(queryParser);
 
-require('./config/passport');
+app.use(queryParser);
 app.use(bodyParser.json());
 app.use('/api/auth', auth);
 app.use('/api/users', authentication, users);
