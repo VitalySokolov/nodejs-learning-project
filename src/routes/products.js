@@ -44,7 +44,6 @@ router.post('/', (req, res) => {
   const { error } = validate(newProduct);
 
   if (error) {
-    console.log(error.details);
     return res.status(400).send(`Product is not valid - ${error.details[0].message}`);
   }
 

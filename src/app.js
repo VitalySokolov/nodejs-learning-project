@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 
+const auth = require('./routes/auth');
 const users = require('./routes/users');
 const products = require('./routes/products');
 const cookieParser = require('./middlewares/cookieParser');
@@ -18,6 +19,7 @@ app.use(cookieParser);
 app.use(queryParser);
 
 app.use(bodyParser.json());
+app.use('/api/auth', auth);
 app.use('/api/users', users);
 app.use('/api/products', products);
 
