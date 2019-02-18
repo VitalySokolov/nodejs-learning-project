@@ -21,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use(cookieParser);
 app.use(queryParser);
 
+require('./config/passport');
 app.use(bodyParser.json());
 app.use('/api/auth', auth);
 app.use('/api/users', authentication, users);
