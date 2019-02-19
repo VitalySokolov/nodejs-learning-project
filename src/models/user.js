@@ -1,5 +1,11 @@
 const Joi = require('joi');
 
+const users = [
+  { id: 1, name: 'Admin', email: 'admin@test.com' },
+  { id: 2, name: 'Power User', email: 'power.user@test.com' },
+  { id: 3, name: 'User', email: 'user@test.com' },
+];
+
 const validUser = {
   id: '12345abc',
   name: 'Test User',
@@ -26,8 +32,8 @@ const validateUserAuth = (user) => {
   return Joi.validate(user, schema);
 };
 
-const getUserByEmail = (email) => {
-  if (validUser.email === email) {
+const getUserByEmail = (userEmail) => {
+  if (validUser.email === userEmail) {
     const { id, name, email } = validUser;
     return { id, name, email };
   }
@@ -35,6 +41,9 @@ const getUserByEmail = (email) => {
   return null;
 };
 
+const getAllUsers = () => [...users];
+
 exports.validate = validateUser;
 exports.validateAuth = validateUserAuth;
 exports.getUserByEmail = getUserByEmail;
+exports.getAllUsers = getAllUsers;
