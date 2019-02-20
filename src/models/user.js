@@ -34,8 +34,7 @@ const validateUserAuth = (user) => {
 
 const getUserByEmail = (userEmail) => {
   if (validUser.email === userEmail) {
-    const { id, name, email } = validUser;
-    return { id, name, email };
+    return validUser;
   }
 
   return null;

@@ -4,6 +4,8 @@ const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 
+dotenv.config();
+
 const auth = require('./routes/auth');
 const users = require('./routes/users');
 const products = require('./routes/products');
@@ -14,7 +16,6 @@ require('./config/passport');
 
 const app = express();
 
-dotenv.config();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 
