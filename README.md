@@ -58,4 +58,29 @@ Run server application
 npm start
 ```
 
+For server application the file '.env' is needed to be placed in the project's root.
+In this file all environment variables could be set.
+Next variables are required to start the server.
+```
+// .env
+
+JWT_PRIVATE_KEY=...
+FACEBOOK_APP_ID=...
+FACEBOOK_APP_SECRET=...
+GOOGLE_CONSUMER_KEY=...
+GOOGLE_CONSUMER_SECRET=...
+TWITTER_CONSUMER_KEY=...
+TWITTER_CONSUMER_SECRET=...
+```
+
+Urls for Authentication:
+```
+localhost:<PORT>/api/auth - simple authentication
+localhost:<PORT>/api/auth/login - passport LocalStrategy authentication
+localhost:<PORT>/api/auth/facebook/login - passport FacebookStrategy authentication
+localhost:<PORT>/api/auth/google/login - passport GoogleStrategy authentication
+localhost:<PORT>/api/auth/twitter/login - passport TwitterStrategy authentication
+```
+
+
 #Server application
