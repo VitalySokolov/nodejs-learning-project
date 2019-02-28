@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
-const GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
+const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const { getUserByEmail } = require('../models/user');
 
@@ -35,12 +35,12 @@ passport.use(new FacebookStrategy(
 
 passport.use(new GoogleStrategy(
   {
-    consumerKey: process.env.GOOGLE_CONSUMER_KEY,
-    consumerSecret: process.env.GOOGLE_CONSUMER_SECRET,
+    clientID: process.env.GOOGLE_CONSUMER_KEY,
+    clientSecret: process.env.GOOGLE_CONSUMER_SECRET,
     callbackURL: 'http://localhost:3000/api/auth/google/callback',
   },
   (token, tokenSecret, profile, done) => {
-    done(null, token);
+    done(null, profile);
   },
 ));
 
@@ -51,6 +51,19 @@ passport.use(new TwitterStrategy(
     callbackURL: 'http://localhost:3000/api/auth/twitter/callback',
   },
   (token, tokenSecret, profile, done) => {
-    done(null, token);
+    console.log('Twitter');
+    done(null, profile);
   },
 ));
+
+passport.serializeUser(function(user, cb) {
+  console.log(`Serialize. User = ${JSON.stringify(user, undefined, 2)}`);
+  cb(null, user);
+});
+
+passport.deserializeUser(function(obj, cb) {
+  console.log(`DeSerialize. User = ${JSON.stringify(obj, undefined, 2)}`);
+  cb(null, obj);
+});
+
+module.exports = passport;

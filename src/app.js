@@ -12,7 +12,7 @@ const products = require('./routes/products');
 const cookieParser = require('./middlewares/cookieParser');
 const queryParser = require('./middlewares/queryParser');
 const authentication = require('./middlewares/auth');
-require('./config/passport');
+const passport = require('./config/passport');
 
 const app = express();
 
@@ -23,6 +23,7 @@ app.set('view engine', 'ejs');
 app.use(cookieParser);
 app.use(queryParser);
 app.use(bodyParser.json());
+app.use(passport.initialize());
 app.use('/api/auth', auth);
 app.use('/api/users', authentication, users);
 app.use('/api/products', authentication, products);
