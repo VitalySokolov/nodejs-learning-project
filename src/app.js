@@ -2,24 +2,31 @@ const bodyParser = require('body-parser');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const dotenv = require('dotenv');
 
+dotenv.config();
+
+const auth = require('./routes/auth');
 const users = require('./routes/users');
 const products = require('./routes/products');
 const cookieParser = require('./middlewares/cookieParser');
 const queryParser = require('./middlewares/queryParser');
+const authentication = require('./middlewares/auth');
+const passport = require('./config/passport');
 
 const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
 
+app.set('view engine', 'ejs');
 app.use(cookieParser);
 app.use(queryParser);
-
 app.use(bodyParser.json());
-app.use('/api/users', users);
-app.use('/api/products', products);
+app.use(passport.initialize());
+app.use('/api/auth', auth);
+app.use('/api/users', authentication, users);
+app.use('/api/products', authentication, products);
 
 app.use((req, res, next) => {
   if (req.url === '/') {
