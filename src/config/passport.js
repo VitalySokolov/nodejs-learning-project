@@ -56,12 +56,12 @@ passport.use(new TwitterStrategy(
   },
 ));
 
-passport.serializeUser(function(user, cb) {
+passport.serializeUser((user, cb) => {
   console.log(`Serialize. User = ${JSON.stringify(user, undefined, 2)}`);
   cb(null, user);
 });
 
-passport.deserializeUser(function(obj, cb) {
+passport.deserializeUser((obj, cb) => {
   console.log(`DeSerialize. User = ${JSON.stringify(obj, undefined, 2)}`);
   cb(null, obj);
 });
