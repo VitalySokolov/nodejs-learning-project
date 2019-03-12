@@ -1,9 +1,12 @@
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
-const { City, validate } = require('./city');
+const { City, validateCity } = require('./city');
+const { Product, validateProduct } = require('./product');
+const { User, validateUser } = require('./user');
 
-// mongoose.connect('mongodb://localhost/learningProject')
-//   .then(() => console.log('Connected to MongoDB...'))
-//   .catch((err) => console.error('Could not connect to MongoDB...', err));
+mongoose.connect('mongodb://localhost/learningProject')
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch((err) => console.error('Could not connect to MongoDB...', err));
 
 const addCity = async (data) => {
   const city = new City({
@@ -11,10 +14,11 @@ const addCity = async (data) => {
     country: data.country,
     capital: data.capital,
     location: data.location,
+    lastModifiedDate: new Date('2019-01-23'),
   });
 
   const result = await city.save();
-  console.log(result);
+  // console.log(result);
 };
 
 const cities = [
@@ -26,24 +30,92 @@ const cities = [
   { name: 'Hamburg', country: 'Germany', capital: false, location: { lat: 57.193621, long: 28.933050 } },
 ];
 
-// {
-//   "name": "Andorra la Vella",
-//   "country": "Andorra",
-//   "capital": true,
-//   "location": {
-//   "lat": 42.307621,
-//     "long": 1.314050
-// }
-// }
-
 const populateCities = async () => {
   for (const city of cities) {
     await addCity(city);
   }
 };
 
-// populateCities()
-//   .then(() => console.log('End'));
+const products = [
+  {
+    title: 'Brick',
+    amount: 33,
+    reviews: [
+      { user: 'Admin', note: 'Some review' },
+      { user: 'User', note: 'Some review' },
+    ],
+  },
+  {
+    title: 'Window',
+    amount: 10,
+    reviews: [
+      { user: 'Admin', note: 'Some review' },
+      { user: 'User', note: 'Some review' },
+    ],
+  },
+  {
+    title: 'Door',
+    amount: 2,
+    reviews: [
+      { user: 'Admin', note: 'Some review' },
+      { user: 'User', note: 'Some review' },
+    ],
+  }
+];
 
-// const validation = validate({name: 'Brest 123', country: 'Belarus', capital: false, location: { lat: 52.097621, long: 23.734050 }});
+const addProduct = async (data) => {
+  const product = new Product({
+    title: data.title,
+    amount: data.amount,
+    reviews: data.reviews || [],
+    lastModifiedDate: new Date('2019-01-23'),
+  });
+
+  const result = await product.save();
+  // console.log(result);
+};
+
+const populateProducts = async () => {
+  for (const product of products) {
+    await addProduct(product);
+  }
+};
+
+const users = [
+  { name: 'Admin', email: 'admin@test.com', password: 'Password', isAdmin: true },
+  { name: 'Power User', email: 'power.user@test.com', password: 'Password' },
+  { name: 'User', email: 'user@test.com', password: 'Password' },
+];
+
+const addUser = async (data) => {
+  const salt = await bcrypt.genSalt(10);
+  const password = await bcrypt.hash(data.password, salt);
+
+  const user = new User({
+    name: data.name,
+    email: data.email,
+    password,
+    isAdmin: data.isAdmin || false,
+  });
+
+  const result = await user.save();
+  // console.log(result);
+};
+
+const populateUsers = async () => {
+  for (const user of users) {
+    await addUser(user);
+  }
+};
+
+populateCities()
+  .then(() => populateProducts())
+  .then(() => populateUsers())
+  .then(() => process.exit(1));
+
+// const validation = validateCity({name: 'Brest 123', country: 'Belarus', capital: false, location: { lat: 52.097621, long: 23.734050 }});
 // console.log(JSON.stringify(validation, undefined, 2));
+
+// Encrypt password
+// Authentication
+// isAdmin

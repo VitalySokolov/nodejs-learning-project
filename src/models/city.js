@@ -28,6 +28,10 @@ const citySchema = new mongoose.Schema({
       required: true,
     },
   },
+  lastModifiedDate: {
+    type: Date,
+    required: true,
+  },
 });
 
 const City = mongoose.model('City', citySchema);
@@ -47,4 +51,4 @@ function validateCity(city) {
 }
 
 exports.City = City;
-exports.validate = validateCity;
+exports.validateCity = validateCity;

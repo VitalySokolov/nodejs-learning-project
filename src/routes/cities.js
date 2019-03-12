@@ -9,7 +9,6 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  console.log(JSON.stringify(req.body, undefined, 2));
   const { error } = validate(req.body);
   if (error) {
     return res.status(400).send(`City data is not valid - ${error.details[0].message}`);
@@ -20,6 +19,7 @@ router.post('/', async (req, res) => {
     country: req.body.country,
     capital: req.body.capital || false,
     location: req.body.location,
+    lastModifiedDate: Date().now(),
   });
   city = await city.save();
 
@@ -48,6 +48,7 @@ router.put('/:id', async (req, res) => {
       country: req.body.country,
       capital: req.body.capital || false,
       location: req.body.location,
+      lastModifiedDate: Date().now(),
     },
     { new: true });
 

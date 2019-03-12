@@ -1,57 +1,51 @@
 const Joi = require('joi');
+const mongoose = require('mongoose');
 
-let nextId = 4;
-const products = [
-  {
-    id: 1,
-    title: 'Brick',
-    amount: 33,
-    reviews: [
-      { user: 'Admin', note: 'Some review' },
-      { user: 'User', note: 'Some review' },
-    ],
+const reviewSchema = new mongoose.Schema({
+  user: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
   },
-  {
-    id: 2,
-    title: 'Window',
-    amount: 10,
-    reviews: [
-      { user: 'Admin', note: 'Some review' },
-      { user: 'User', note: 'Some review' },
-    ],
+  note: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 1024,
+  }
+});
+
+const productSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 50,
   },
-  {
-    id: 3,
-    title: 'Door',
-    amount: 2,
-    reviews: [
-      { user: 'Admin', note: 'Some review' },
-      { user: 'User', note: 'Some review' },
-    ],
+  amount: {
+    type: Number,
+    required: true,
+    validate: {
+      validator: Number.isInteger,
+      message: '{VALUE} is not an integer value',
+    },
   },
-];
+  reviews: {
+    type: [reviewSchema],
+    default: undefined,
+  },
+  lastModifiedDate: {
+    type: Date,
+    required: true,
+  },
+});
 
-const getAllProducts = () => [...products];
-
-const getProductById = (id) => products.find((item) => item.id === parseInt(id, 10));
-
-const addProduct = (product) => {
-  const newProduct = {
-    id: nextId,
-    title: product.title,
-    amount: product.amount,
-    reviews: product.reviews || [],
-  };
-  products.push(newProduct);
-  nextId += 1;
-
-  return newProduct;
-};
+const Product = mongoose.model('Product', productSchema);
 
 const validateProduct = (product) => {
   const schema = {
-    id: Joi.number().integer().positive(),
-    title: Joi.string().required(),
+    title: Joi.string().min(2).max(50).required(),
     amount: Joi.number().integer().positive().required(),
     reviews: Joi.array().items({
       user: Joi.string().required(),
@@ -62,7 +56,5 @@ const validateProduct = (product) => {
   return Joi.validate(product, schema);
 };
 
-exports.validate = validateProduct;
-exports.getAllProducts = getAllProducts;
-exports.getProductById = getProductById;
-exports.addProduct = addProduct;
+exports.Product = Product;
+exports.validateProduct = validateProduct;

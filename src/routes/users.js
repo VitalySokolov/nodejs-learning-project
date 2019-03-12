@@ -1,10 +1,11 @@
 const express = require('express');
-const { getAllUsers } = require('../models/user');
+const { User } = require('../models/user');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  res.send(getAllUsers());
+  const users = await User.find().select('-password');
+  res.send(users);
 });
 
 module.exports = router;
