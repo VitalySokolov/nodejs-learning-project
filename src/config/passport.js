@@ -1,24 +1,29 @@
+const bcrypt = require('bcrypt');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
-const { getUserByEmail } = require('../models/user');
+const { User } = require('../models/user');
 
 passport.use(new LocalStrategy(
   {
     usernameField: 'email',
     passwordField: 'password',
   },
-  (mail, password, cb) => {
-    const user = getUserByEmail(mail);
+  async (mail, password, cb) => {
+    const user = await User.findOne({ email: mail });
 
-    if (!user || user.password !== password) {
+    if (!user) {
       return cb(null, false, { message: 'Invalid email or password.' });
     }
 
-    const { id, name, email } = user;
-    return cb(null, { id, name, email });
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return cb(null, false, { message: 'Invalid email or password.' });
+    }
+
+    return cb(null, user);
   },
 ));
 
@@ -51,18 +56,15 @@ passport.use(new TwitterStrategy(
     callbackURL: 'http://localhost:3000/api/auth/twitter/callback',
   },
   (token, tokenSecret, profile, done) => {
-    console.log('Twitter');
     done(null, profile);
   },
 ));
 
 passport.serializeUser((user, cb) => {
-  console.log(`Serialize. User = ${JSON.stringify(user, undefined, 2)}`);
   cb(null, user);
 });
 
 passport.deserializeUser((obj, cb) => {
-  console.log(`DeSerialize. User = ${JSON.stringify(obj, undefined, 2)}`);
   cb(null, obj);
 });
 

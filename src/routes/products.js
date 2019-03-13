@@ -62,7 +62,7 @@ router.put('/:id', async (req, res) => {
 
   if (!product) return res.status(404).send('The product with the given ID was not found.');
 
-  res.send(product);
+  return res.send(product);
 });
 
 router.delete('/:id', async (req, res) => {
@@ -70,7 +70,7 @@ router.delete('/:id', async (req, res) => {
 
   if (!product) return res.status(404).send('The product with the given ID was not found.');
 
-  res.send(product);
+  return res.send(product);
 });
 
 module.exports = router;

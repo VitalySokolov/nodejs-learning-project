@@ -18,12 +18,9 @@ module.exports = (app) => {
   app.use(passport.initialize());
   app.use(bodyParser.json());
   app.use('/api/auth', auth);
-  // app.use('/api/users', authentication, users);
-  // app.use('/api/products', authentication, products);
-  // app.use('/api/cities', authentication, cities);
-  app.use('/api/users', users);
-  app.use('/api/products',  products);
-  app.use('/api/cities',  cities);
+  app.use('/api/users', authentication, users);
+  app.use('/api/products', authentication, products);
+  app.use('/api/cities', authentication, cities);
 
   app.use((req, res, next) => {
     if (req.url === '/') {

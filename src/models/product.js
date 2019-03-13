@@ -13,7 +13,7 @@ const reviewSchema = new mongoose.Schema({
     required: true,
     minlength: 2,
     maxlength: 1024,
-  }
+  },
 });
 
 const productSchema = new mongoose.Schema({

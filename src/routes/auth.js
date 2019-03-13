@@ -1,13 +1,23 @@
+const Joi = require('joi');
+const bcrypt = require('bcrypt');
 const express = require('express');
-const jwt = require('jsonwebtoken');
 const passport = require('passport');
 
-const { validateAuth, getUserByEmail } = require('../models/user');
+const { User } = require('../models/user');
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  const { error } = validateAuth(req.body);
+const validate = (user) => {
+  const schema = {
+    email: Joi.string().min(5).max(255).required().email(),
+    password: Joi.string().min(5).max(255).required(),
+  };
+
+  return Joi.validate(user, schema);
+};
+
+router.post('/', async (req, res) => {
+  const { error } = validate(req.body);
   if (error) {
     const response = {
       code: 400,
@@ -17,17 +27,18 @@ router.post('/', (req, res) => {
     return res.status(400).json(response);
   }
 
-  const user = getUserByEmail(req.body.email);
-  if (!user || user.password !== req.body.password) {
-    const response = {
-      code: 404,
-      message: 'Not found',
-      data: 'Invalid email or password',
-    };
-    return res.status(404).json(response);
-  }
+  const invalidUserOrPasswordResponse = {
+    code: 400,
+    message: 'Invalid email or password',
+  };
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_PRIVATE_KEY);
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).json(invalidUserOrPasswordResponse);
+
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) return res.status(400).json(invalidUserOrPasswordResponse);
+
+  const token = user.generateAuthToken();
   const response = {
     code: 200,
     message: 'OK',
@@ -37,16 +48,16 @@ router.post('/', (req, res) => {
     },
     token,
   };
-  return res.status(200).json(JSON.stringify(response));
+  return res.json(response);
 });
 
+/* eslint-disable consistent-return */
 router.post('/login', (req, res) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (!user) {
-      return res.status(404).json({
-        code: 404,
-        message: 'Not found',
-        data: info.message,
+      return res.status(400).json({
+        code: 400,
+        message: info.message,
       });
     }
 
@@ -59,18 +70,28 @@ router.post('/login', (req, res) => {
         });
       }
 
-      const token = jwt.sign(user, process.env.JWT_PRIVATE_KEY);
-      return res.json({ user, token });
+      const token = user.generateAuthToken();
+      const response = {
+        code: 200,
+        message: 'OK',
+        data: {
+          email: user.email,
+          username: user.name,
+        },
+        token,
+      };
+
+      return res.json(response);
     });
   })(req, res);
 });
+/* eslint-enable consistent-return */
 
 router.get('/facebook/login', passport.authenticate('facebook'));
 
 router.get('/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   (req, res) => {
-    console.log('Facebook login - success');
     res.redirect('/');
   });
 
@@ -79,7 +100,6 @@ router.get('/google/login', passport.authenticate('google', { scope: 'https://ww
 router.get('/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    console.log('Google login - success');
     res.redirect('/');
   });
 

@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
 
   if (!city) return res.status(404).send('The city with the given ID was not found.');
 
-  res.send(city);
+  return res.send(city);
 });
 
 router.delete('/:id', async (req, res) => {
@@ -62,7 +62,7 @@ router.delete('/:id', async (req, res) => {
 
   if (!city) return res.status(404).send('The city with the given ID was not found.');
 
-  res.send(city);
+  return res.send(city);
 });
 
 module.exports = router;
