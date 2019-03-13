@@ -12,7 +12,8 @@
     "echo-server": "nodemon src/simple-servers/echo-server.js",
     "cli-app": "nodemon --exec babel-node src/cli/app.js",
     "lint": "./node_modules/.bin/eslint src/**/*.js src/*.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "populate-mongodb": "node src/models/populate-mongodb.js"
   },
   "author": "Vitalii Sokolov",
   "license": "ISC",
