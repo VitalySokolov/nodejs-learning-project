@@ -112,4 +112,4 @@ const populateUsers = async () => {
 populateCities()
   .then(() => populateProducts())
   .then(() => populateUsers())
-  .then(() => process.exit(1));
+  .then(() => process.exit(0));

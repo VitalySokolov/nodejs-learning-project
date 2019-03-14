@@ -1,5 +1,5 @@
 const express = require('express');
-const { City, validate } = require('../models/city');
+const { City, validateCity } = require('../models/city');
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validateCity(req.body);
   if (error) {
     return res.status(400).send(`City data is not valid - ${error.details[0].message}`);
   }
@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
     country: req.body.country,
     capital: req.body.capital || false,
     location: req.body.location,
-    lastModifiedDate: Date().now(),
+    lastModifiedDate: Date.now(),
   });
   city = await city.save();
 
@@ -37,7 +37,7 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { error } = validate(req.body);
+  const { error } = validateCity(req.body);
   if (error) {
     return res.status(400).send(`City data is not valid - ${error.details[0].message}`);
   }
@@ -48,7 +48,7 @@ router.put('/:id', async (req, res) => {
       country: req.body.country,
       capital: req.body.capital || false,
       location: req.body.location,
-      lastModifiedDate: Date().now(),
+      lastModifiedDate: Date.now(),
     },
     { new: true });
 

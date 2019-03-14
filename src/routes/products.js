@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
     title: req.body.title,
     amount: req.body.amount,
     reviews: req.body.reviews || [],
-    lastModifiedDate: Date().now(),
+    lastModifiedDate: Date.now(),
   });
 
   product = await product.save();
@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
       title: req.body.title,
       amount: req.body.amount,
       reviews: req.body.reviews || [],
-      lastModifiedDate: Date().now(),
+      lastModifiedDate: Date.now(),
     },
     { new: true });
 
