@@ -1,21 +1,30 @@
 const http = require('http');
+const { MongoClient } = require('mongodb');
 
 const port = process.env.PORT || 3000;
 
-const product = {
-  id: 1,
-  name: 'Supreme T-Shirt',
-  brand: 'Supreme',
-  price: 99.99,
-  options: [
-    { color: 'blue' },
-    { size: 'XL' },
-  ],
+const getRandomCity = (cities) => cities[Math.floor(Math.random() * cities.length)];
+
+const createServer = (db) => {
+  http.createServer((req, res) => {
+    db.collection('cities').find().toArray((err, result) => {
+      if (err) {
+        return console.log(err);
+      }
+      res.setHeader('Content-Type', 'application/json');
+      const city = getRandomCity(result);
+      return res.end(JSON.stringify(city));
+    });
+  }).listen(port, () => {
+    console.log(`Server start at port ${port}`);
+  });
 };
 
-http.createServer((req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(product));
-}).listen(port, () => {
-  console.log(`Server start at port ${port}`);
+MongoClient.connect('mongodb://localhost', (err, client) => {
+  if (err) {
+    return console.log(err);
+  }
+
+  const db = client.db('learningProject');
+  return createServer(db);
 });
