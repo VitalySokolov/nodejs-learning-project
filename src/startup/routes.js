@@ -9,7 +9,6 @@ const passport = require('../config/passport');
 const auth = require('../routes/auth');
 const users = require('../routes/users');
 const products = require('../routes/products');
-const cities = require('../routes/cities');
 const authentication = require('../middlewares/auth');
 
 module.exports = (app) => {
@@ -20,7 +19,6 @@ module.exports = (app) => {
   app.use('/api/auth', auth);
   app.use('/api/users', authentication, users);
   app.use('/api/products', authentication, products);
-  app.use('/api/cities', authentication, cities);
 
   app.use((req, res, next) => {
     if (req.url === '/') {
