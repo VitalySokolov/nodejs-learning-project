@@ -65,22 +65,31 @@ Next variables are required to start the server.
 // .env
 
 JWT_PRIVATE_KEY=...
-FACEBOOK_APP_ID=...
-FACEBOOK_APP_SECRET=...
-GOOGLE_CONSUMER_KEY=...
-GOOGLE_CONSUMER_SECRET=...
-TWITTER_CONSUMER_KEY=...
-TWITTER_CONSUMER_SECRET=...
 ```
 
 Urls for Authentication:
 ```
 localhost:<PORT>/api/auth - simple authentication
-localhost:<PORT>/api/auth/login - passport LocalStrategy authentication
-localhost:<PORT>/api/auth/facebook/login - passport FacebookStrategy authentication
-localhost:<PORT>/api/auth/google/login - passport GoogleStrategy authentication
-localhost:<PORT>/api/auth/twitter/login - passport TwitterStrategy authentication
 ```
 
+#SQL DB Server application
 
-#Server application
+Required steps:
+1. Install postgres db.
+2. Create database.
+3. Add user for this database.
+4. Add next variables to .env file.
+```
+// .env
+
+DB_USER=...
+DB_PASS=...
+DB_DATABASE=...
+```
+
+5. Install sequelize-cli
+6. Run commands to create/populate tables.
+```
+sequelize db:migrate
+sequelize db:seed:all
+```
