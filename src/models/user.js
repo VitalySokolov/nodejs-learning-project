@@ -1,46 +1,34 @@
-const Joi = require('joi');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 3,
-    maxlength: 50,
-  },
-  email: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 255,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 1024,
-  },
-  isAdmin: Boolean,
-});
-
-userSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign({ _id: this._id, isAdmin: this.isAdmin }, process.env.JWT_PRIVATE_KEY);
-  return token;
-};
-
-const User = mongoose.model('User', userSchema);
-
-const validateUser = (user) => {
-  const schema = {
-    name: Joi.string().min(2).max(50).required(),
-    email: Joi.string().min(5).max(255).email().required(),
-    password: Joi.string().min(5).max(255).required(),
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      async set(val) {
+        const salt = await bcrypt.genSalt(10);
+        const password = await bcrypt.hash(val, salt);
+        this.setDataValue('password', password);
+      },
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  });
+  User.prototype.generateAuthToken = function () {
+    const token = jwt.sign({ id: this.id, isAdmin: this.isAdmin }, process.env.JWT_PRIVATE_KEY);
+    return token;
   };
-
-  return Joi.validate(user, schema);
+  return User;
 };
-
-exports.validateUser = validateUser;
-exports.User = User;
