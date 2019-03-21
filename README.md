@@ -72,7 +72,7 @@ Urls for Authentication:
 localhost:<PORT>/api/auth - simple authentication
 ```
 
-#SQL DB Server application
+# SQL DB Server application
 
 Required steps:
 1. Install postgres db.
